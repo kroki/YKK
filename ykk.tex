@@ -1,0 +1,106 @@
+% Local Variables:
+% eval: (defvar-local tex-furigana-enabled 't)
+% eval: (defadvice kkc-terminate (before kkc-terminate-around)
+%         "Produce furigana wrapper for Japanese input."
+%         (if (and tex-furigana-enabled
+%                  (> (car kkc-current-conversions) 0))
+%             (progn
+%               (goto-char (overlay-start kkc-overlay-head))
+%               (insert "^{" kkc-original-kana "}{")
+%               (goto-char (overlay-end kkc-overlay-tail))
+%               (insert "}"))))
+% eval: (ad-activate 'kkc-terminate)
+% End:
+%
+% To deactivate furigana wrapper eval (ad-deactivate 'kkc-terminate)
+% or (setq tex-furigana-enabled nil).
+%
+\documentclass[12pt,draft]{article}
+\usepackage[a4paper,left=1.5cm,right=1.5cm,top=2cm,bottom=0.5cm]{geometry}
+\pagestyle{headings}
+\renewcommand\sectionmark[1]{\markright{#1\hfill}}
+\setlength\headsep{2ex}
+\setcounter{secnumdepth}{0} % Do not number sections.
+\setlength\parindent{0pt}
+\renewcommand\baselinestretch{1.5}
+
+\usepackage[hidelinks,unicode=true,draft=false]{hyperref}
+
+\usepackage{luatexja-fontspec}
+\setmainfont[Ligatures=TeX]{CMU Serif}
+\setsansfont[Ligatures=TeX]{CMU Sans Serif}
+\setmonofont[Ligatures=TeX]{CMU Typewriter Text}
+\setmainjfont{IPAGothic}
+
+%\usepackage{luatexja-ruby}
+\newcommand\ruby[2]{%
+  \leavevmode
+  \setbox0\hbox{#1}\setbox1\hbox{{\jfontspec[Scale=.5]{IPAGothic}#2}}%
+  \dimen0=.5\wd0\advance\dimen0 by-.5\wd1
+  \dimen1=\ht0%\advance\dimen1 by\dp1
+  \dimen2=\dimen0\advance\dimen2 by\wd1
+  \kern\dimen0\raise\dimen1\box1
+  \advance\dimen0 by\wd1
+  \kern-\dimen2\box0{}%
+}
+
+\usepackage{xcolor}
+
+\newcounter{YKKpage}
+\newcommand\page[1][0]{%
+  \ifnum#1=0%
+    \stepcounter{YKKpage}%
+  \else
+    \setcounter{YKKpage}{#1}%
+  \fi
+  \leavevmode\llap{\color{black!40}p.\,\theYKKpage}\ignorespaces
+}
+
+\newcommand\Saying[1]%
+    {\hangindent=2.2cm\hangafter=1\makebox[\hangindent][r]{\color{black!60}#1：}}
+
+\newcommand\Sign{\Saying{\it sign}}
+\newcommand\A{\Saying{アルファ}}
+\renewcommand\O{\Saying{おじさん}}
+\renewcommand\T{\Saying{タカヒロ}}
+\newcommand\N{\Saying{narrator}}
+\renewcommand\S{\Saying{先生}}
+\renewcommand\P{\Saying{person}}
+\newcommand\K{\Saying{ココネ}}
+\newcommand\Y{\Saying{アヤセ}}
+\renewcommand\H{\Saying{初瀬野}}
+\newcommand\SH{\Saying{シバ}}
+\renewcommand\M{\Saying{マッキ}}
+\newcommand\AM{\Saying{Ａ７Ｍ１}}
+\newcommand\R{\Saying{丸子}}
+\newcommand\NA{\Saying{ナイ}}
+\newcommand\SA{\Saying{サエ}}
+
+
+\begin{document}
+\catcode`\^=\active \catcode`\_=\active
+\def^#1#2{\texorpdfstring{\ruby{#2}{\color{black!40}#1}}{#2}}%
+\def_#1#2{\leavevmode\hbox{#2}}%
+
+\let\ =　% Replace \[space] with wide space (U+3000).
+
+\thispagestyle{empty}
+\tableofcontents
+\clearpage
+
+\include{01}
+\include{02}
+\include{03}
+\include{04}
+\include{05}
+\include{06}
+\include{07}
+\include{08}
+\include{09}
+\include{10}
+\include{11}
+\include{12}
+\include{13}
+\include{14}
+
+\end{document}
